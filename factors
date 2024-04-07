@@ -1,36 +1,36 @@
 #!/usr/bin/python3
 from sys import argv
 import math
-
-# This script factorizes numbers into a product of two smaller numbers
-
-
-def find_factors(number):
-    # Function to find the factors of a given number
-    factors = []
-    divisor = 2
-    while number > 1:
-        if number % divisor == 0:
-            factors.append(divisor)
-            number //= divisor
-        else:
-            divisor += 1
-    return factors
+"""Factorize as many numbers as possible into a product of 2 smaller nums"""
 
 
-def factorize_numbers(file_path):
-    # Reads numbers from a file and prints their factors
-    with open(file_path, encoding="utf-8") as file:
-        # Read each line from the file
-        for line in file.readlines():
-            # Convert each line to an integer
-            number = int(line.strip())
-            # Find factors for the integer using the find_factors function
-            factors = find_factors(number)
-            # Print factors
-            print(f"{number}={'*'.join(map(str, factors))}")
+def factory(num):
+    """gets the factors of a number"""
+    if num % 2 == 0:
+        i = 2
+        print("{}={}*{}".format(num, int(num//i), i))
+    else:
+        sq = int(math.sqrt(num)) + 1
+        for i in range(3, sq, +2):
+            if num % i == 0:
+                print("{}={}*{}".format(num, int(num//i), i))
+                return
+            if num % (sq + i) == 0:
+                print("{}={}*{}".format(num, sq + i, int(num//(sq + i))))
+                return
+            if num % (sq - i) == 0:
+                print("{}={}*{}".format(num, sq - 1, int(num//(sq - i))))
+                return
+
+
+def factors(filename):
+    """read_file and prints them out"""
+
+    with open(filename, encoding="utf-8") as my_file:
+        for i in my_file.readlines():
+            n = int(i)
+            result = factory(n)
 
 
 if __name__ == "__main__":
-    # Run the factorization process for the file provided as command-line argument
-    factorize_numbers(argv[1])
+    factors(argv[1])
