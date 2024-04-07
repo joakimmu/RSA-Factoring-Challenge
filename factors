@@ -1,38 +1,32 @@
 #!/usr/bin/env python3
-""" Factor numbers """
+""" Factors numbers from a file """
 from sys import argv
 from math import sqrt
 
 
 def open_read_file(file_name):
-    """read from file
-    add to array
-    """
+    """Reads integers from a file and returns them as a list"""
     with open(file_name, "r", encoding="utf-8") as file:
         lines = file.readlines()
-    number_to_factor = []
-    for line in lines:
-        number_to_factor.append(int(line))
-    return number_to_factor
+    return [int(line) for line in lines]
 
 
-def find_and_times(n):
-    """factor each
-    n given
-    """
-    for i in range(1, n):
-        if n == ((n // i) * i):
-            print("{}={}*{}".format(n, (n // i), i))
-            break
+def find_factors(n):
+    """Finds and prints all factors of a number"""
+    factors = []
+    for i in range(1, int(sqrt(n)) + 1):
+        if n % i == 0:
+            factors.append(i)
+            if n // i != i:  # Check for perfect squares and print the other factor if not
+                factors.append(n // i)
+    print("{}: {}".format(n, factors))  # Print number and all its factors
 
 
-def fac_list(ls):
-    """factor each
-    num in ls
-    """
-    for i in ls:
-        find_and_times(i)
+def factor_list(numbers):
+    """Factors each number in a list"""
+    for num in numbers:
+        find_factors(num)
 
 
 if len(argv) == 2:
-    fac_list(open_read_file(argv[1]))
+    factor_list(open_read_file(argv[1]))
