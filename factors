@@ -1,49 +1,61 @@
-#!/usr/bin/env bash
-#is a challenge
-check_factor()
-{
-	if [ $# -ne 3 ];
-        then
-                args=("$@")
-                count=0
-                num2=1
-                for a in ${args[*]};
-                do
-                        if [ $count -gt 1 ];
-                        then
-                                num2=$(echo $a*$num2 | bc)
-                        fi
-                        count=$((count + 1))
-                done
-        else
-                num2=$3
-        fi
+#!/usr/bin/python3
+"""
+Factorize as many numbers as possible into a product of two smaller numbers.
 
-        num1=$2
-        num=$(echo "$1" | tr ':' '=')
+Functions:
+    find_divisor(num) -> int
+    factorize()
 
-        result=$(echo "if($num2 > $num1) 1 else 0" | bc)
-	        if ((result == 1)); then
-		        numcp=$num1
-		        num1=$num2
-		        num2=$numcp
-                fi
+Usage: ./factors <file>
+    Where <file> is a file containing natural numbers to factor.
+    One number per line.
+Output format: n=p*q
+    One factorization per line.
+    p and q are not always prime numbers.
+"""
 
-        echo "$num$num1*$num2"
-}
+import sys
 
-if [ $# -ne 1 ]
-then
-        echo 'Usage: rsa <file>'
-        exit 1
-else
 
-        while read i
-        do
+def find_divisor(num: int) -> int:
+    """
+    Finds the smallest divisor of a given number.
+    Args:
+        num (int): A number to find the smallest divisor for.
+    Returns:
+        smallest divisor if found
+        0 if the number is prime
+    """
 
-                result=$(factor "$i")
-                check_factor $result
+    while num % 2 == 0:
+        return 2
 
-        done < "$1"
-fi
+    factor = 3
+    while factor * factor <= num:
+        if num % factor == 0:
+            return factor
+        else:
+            factor += 2
+
+    return 1
+
+
+def factorize():
+    """
+    Factorizes as many numbers as possible into
+    a product of two smaller numbers and print them.
+    """
+
+    with open(sys.argv[1]) as f:
+        line = f.readline()
+        while line != '':
+            num = int(line)
+            div = find_divisor(num)
+            print(f"{num}={num//div}*{div}")
+
+            line = f.readline()
+
+
+if __name__ == "__main__":
+    factorize()
 
